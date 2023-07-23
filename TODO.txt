@@ -1,0 +1,3 @@
+Chech Connect Duration on first query to DB (mongoose.connect())
+Include db access chech in healt
+Include bitcoin network access chech in healt
