@@ -3,12 +3,19 @@
         "dev": "nodemon app.js"
     },
     "dependencies": {
+        "bip32": "^4.0.0",
+        "bip39": "^3.1.0",
+        "bitcoinjs-lib": "^6.1.3",
         "cors": "^2.8.5",
         "crypto": "^1.0.1",
         "dotenv": "^16.3.1",
+        "ecpair": "^2.1.0",
         "express": "^4.18.2",
+        "https": "^1.0.0",
         "mongoose": "^7.4.0",
         "nodemon": "^3.0.1",
-        "redis": "^4.6.7"
+        "redis": "^4.6.7",
+        "satoshi-bitcoin": "^1.0.5",
+        "tiny-secp256k1": "^2.2.3"
     }
 }
