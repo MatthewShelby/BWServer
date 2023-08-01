@@ -781,12 +781,66 @@ app.get("/fees", async (req, res) => {
 // ========== Running the server
 const server = app.listen(port, async () => { //ssss
       console.log(`Example app listening on port ${port}!`);
-      //var gasFeeRate = await getFees('med');
+      // var m = encrypt('Hello world. from the server. I want to test and see what will happen if i give it longer string')
+      // console.log(m)
+      // var n = decrypt(m)
+      // console.log(n)
+      for (let i = 0; i < 10; i++) {
+
+            var d = crypto.randomUUID()
+            //var d = encrypt(Date.now().toString())
+            console.log(d)
+      }
+
 });
 
 server.keepAliveTimeout = 120 * 1000;
 server.headersTimeout = 120 * 1000;
 
+//#region CRyptography
+//const ENC = 'bf3c199c2470cb977d907b1e0a17c17b';
+const ENC = process.env.secret32;
+//const IV = "wewewewewewewewe";
+const IV = process.env.secret16;
+const ALGO = "aes-256-cbc"
+
+const encrypt = ((text) => {
+      let cipher = crypto.createCipheriv(ALGO, ENC, IV);
+      let encrypted = cipher.update(text, 'utf8', 'base64');
+      encrypted += cipher.final('base64');
+      return encrypted;
+});
+
+const decrypt = ((text) => {
+      let decipher = crypto.createDecipheriv(ALGO, ENC, IV);
+      let decrypted = decipher.update(text, 'base64', 'utf8');
+      return (decrypted + decipher.final('utf8'));
+});
+
+// const algorithm = 'aes-256-ctr';
+// const ENCRYPTION_KEY = 'adadadadadadadad'; // or generate sample key Buffer.from('FoCKvdLslUuB4y3EZlKate7XGottHski1LmyqJHvUhs=', 'base64');
+// const IV_LENGTH = 16;
+
+// function encrypt(text) {
+//       let iv = crypto.randomBytes(IV_LENGTH);
+//       let cipher = crypto.createCipheriv(algorithm, Buffer.from(ENCRYPTION_KEY, 'hex'), iv);
+//       let encrypted = cipher.update(text);
+//       encrypted = Buffer.concat([encrypted, cipher.final()]);
+//       return iv.toString('hex') + ':' + encrypted.toString('hex');
+// }
+
+// function decrypt(text) {
+//       let textParts = text.split(':');
+//       let iv = Buffer.from(textParts.shift(), 'hex');
+//       let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+//       let decipher = crypto.createDecipheriv(algorithm, Buffer.from(ENCRYPTION_KEY, 'hex'), iv);
+//       let decrypted = decipher.update(encryptedText);
+//       decrypted = Buffer.concat([decrypted, decipher.final()]);
+//       return decrypted.toString();
+// }
+//#endregion CRyptography
+
+//
 
 async function dbConnect() {
       return new Promise((resolve, reject) => {
@@ -837,27 +891,27 @@ async function getVal() {
 
 
 
-//Encrypting text
-function encrypt(text) {
-      let secret = process.env.secret
-      let key = crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 32);
-      let iv = crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 16);
-      let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-      let encrypted = cipher.update(text);
-      encrypted = Buffer.concat([encrypted, cipher.final()]);
-      //return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
-      return encrypted.toString('hex');
-}
+// //Encrypting text
+// function encrypt(text) {
+//       let secret = process.env.secret
+//       let key = crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 32);
+//       let iv = crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 16);
+//       let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+//       let encrypted = cipher.update(text);
+//       encrypted = Buffer.concat([encrypted, cipher.final()]);
+//       //return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
+//       return encrypted.toString('hex');
+// }
 
-// Decrypting text  
-function decrypt(text) {
-      let iv = Buffer.from(text.iv, 'hex');
-      let encryptedText = Buffer.from(text.encryptedData, 'hex');
-      let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-      let decrypted = decipher.update(encryptedText);
-      decrypted = Buffer.concat([decrypted, decipher.final()]);
-      return decrypted.toString();
-}
+// // Decrypting text
+// function decrypt(text) {
+//       let iv = Buffer.from(text.iv, 'hex');
+//       let encryptedText = Buffer.from(text.encryptedData, 'hex');
+//       let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+//       let decrypted = decipher.update(encryptedText);
+//       decrypted = Buffer.concat([decrypted, decipher.final()]);
+//       return decrypted.toString();
+// }
 
 
 //#endregion ==================== END SERVER FUNCTIONS ====================
