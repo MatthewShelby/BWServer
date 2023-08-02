@@ -713,6 +713,7 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
 
 // ========== Check Availability
 app.get("/health", async (req, res) => {
+      console.log('health')
       return res.status(200).json({
             status: "success"
       });
