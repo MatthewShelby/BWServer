@@ -722,6 +722,18 @@ app.get("/health", async (req, res) => {
             status: "success"
       });
 })
+app.get("/", async (req, res) => {
+      console.log('path: / ')
+      return res.status(200).json({
+            status: "success", path: 'path: / '
+      });
+})
+app.get("", async (req, res) => {
+      console.log('path: ')
+      return res.status(200).json({
+            status: "success", path: 'path:  '
+      });
+})
 
 
 // ========== Check Status
