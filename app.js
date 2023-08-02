@@ -17,14 +17,18 @@ const cors = require('cors');
 /**
  * App CORS policy definition. This *** MUST be before *** all external functions and endpoints
  */
-var acceptedUrl = process.env.aurl
-app.use(function (req, res, next) {
-      console.log('accepted Url:')
-      console.log(acceptedUrl)
-      res.header("Access-Control-Allow-Origin", acceptedUrl);
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      next();
-});
+// var acceptedUrl = process.env.aurl
+// app.use(function (req, res, next) {
+//       console.log('accepted Url:')
+//       console.log(acceptedUrl)
+//       res.header("Access-Control-Allow-Origin", acceptedUrl);
+//       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//       next();
+// });
+
+app.use(cors({
+      origin: '*'
+}));
 
 
 // Bitcoin blockchain requirements:
