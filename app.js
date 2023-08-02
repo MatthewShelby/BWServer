@@ -798,7 +798,8 @@ app.get("/fees", async (req, res) => {
 
 
 // ========== Running the server
-const server = app.listen(port, async () => { //ssss
+//const server = 
+app.listen(port, async () => { //ssss
       console.log(`Example app listening on port ${port}!`);
       // var m = encrypt('Hello world. from the server. I want to test and see what will happen if i give it longer string')
       // console.log(m)
