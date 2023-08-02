@@ -813,8 +813,8 @@ const server = app.listen(port, async () => { //ssss
 
 });
 
-server.keepAliveTimeout = 120 * 1000;
-server.headersTimeout = 120 * 1000;
+// server.keepAliveTimeout = 120 * 1000;
+// server.headersTimeout = 120 * 1000;
 
 //#region CRyptography
 //const ENC = 'bf3c199c2470cb977d907b1e0a17c17b';
