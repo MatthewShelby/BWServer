@@ -722,6 +722,8 @@ app.get("/health", async (req, res) => {
 
 // ========== Check Status
 app.get("/status", async (req, res) => {
+      console.log('status check started')
+
       var dbStatus = await dbConnect()
       if (dbStatus) {
             console.log('status check: OK - from : ')
