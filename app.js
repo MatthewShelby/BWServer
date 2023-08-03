@@ -26,8 +26,14 @@ const cors = require('cors');
 
 
 var acceptedUrlArray = process.env.aAurl
+const origin = req.headers.origin;
+var accept = ''
+if (acceptedUrlArray.includes(origin)) {
+      //res.setHeader('Access-Control-Allow-Origin', origin);
+      accept = origin
+}
 app.use(cors({
-      origin: acceptedUrlArray
+      origin: accept
 }));
 
 
