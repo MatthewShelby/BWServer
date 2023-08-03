@@ -6,8 +6,6 @@ const mongoose = require("mongoose");
 const Data = require('./class')
 const User = require('./UserCS')
 var dburi = process.env.dburi
-//const dbcs = `mongodb+srv://broker:wGokfsvMGnFW5DY7@cluster0.kkxdm.mongodb.net/APT?retryWrites=true`
-const dbcs = `mongodb+srv://broker:wGokfsvMGnFW5DY7@cluster0.kkxdm.mongodb.net/APT?retryWrites=true&w=majority?directConnection=true`
 const crypto = require('crypto');
 const https = require('https');
 const cors = require('cors');
@@ -26,13 +24,15 @@ const cors = require('cors');
 //       next();
 // });
 
+
+var acceptedUrlArray = process.env.aAurl
 app.use(cors({
-      origin: '*'
+      origin: acceptedUrlArray
 }));
 
 
 // Bitcoin blockchain requirements:
-const bip39 = require('bip39')
+//const bip39 = require('bip39')
 const bitcoin = require('bitcoinjs-lib')
 const ecc = require('tiny-secp256k1')
 const { BIP32Factory } = require('bip32')
@@ -447,7 +447,8 @@ var isGassFeeSet = false
 app.post("/register", express.json({ type: '*/*' }), async (req, res) => {
       try {
             console.log('--register--')
-            await mongoose.connect(dburi)
+
+            // Validation
             var Inp = req.body
             if (Inp.username.length < 6) {
                   return res.status(400).send('Username must be at least 6 chars long.');
@@ -461,6 +462,13 @@ app.post("/register", express.json({ type: '*/*' }), async (req, res) => {
                   return res.status(400).send('Username already exists.');
             }
             console.log('Validation OK')
+
+            var dbStatus = await dbConnect()
+            if (!dbStatus) {
+                  console.log('Database Connection Failed.')
+                  return res.status(400).send('Database Connection Failed.');
+            }
+
 
             // Latest Address Seed
             var LAS = undefined
@@ -541,7 +549,11 @@ app.post("/login", express.json({ type: '*/*' }), async (req, res) => {
             }
             console.log('Validation OK')
 
-            await mongoose.connect(dburi)
+            var dbStatus = await dbConnect()
+            if (!dbStatus) {
+                  console.log('Database Connection Failed.')
+                  return res.status(400).send('Database Connection Failed.');
+            }
 
             let exists = await User.exists({ username: Inp.username });
 
@@ -725,15 +737,10 @@ app.get("/health", async (req, res) => {
 app.get("/", async (req, res) => {
       console.log('path: / ')
       return res.status(200).json({
-            status: "success", path: 'path: / '
+            status: "success"
       });
 })
-app.get("", async (req, res) => {
-      console.log('path: ')
-      return res.status(200).json({
-            status: "success", path: 'path:  '
-      });
-})
+
 
 
 // ========== Check Status
@@ -801,17 +808,6 @@ app.get("/fees", async (req, res) => {
 //const server = 
 app.listen(port, async () => { //ssss
       console.log(`Example app listening on port ${port}!`);
-      // var m = encrypt('Hello world. from the server. I want to test and see what will happen if i give it longer string')
-      // console.log(m)
-      // var n = decrypt(m)
-      // console.log(n)
-      for (let i = 0; i < 10; i++) {
-
-            var d = crypto.randomUUID()
-            //var d = encrypt(Date.now().toString())
-            console.log(d)
-      }
-
 });
 
 // server.keepAliveTimeout = 120 * 1000;
