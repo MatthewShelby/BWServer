@@ -51,7 +51,7 @@ const ecc = require('tiny-secp256k1')
 const { BIP32Factory } = require('bip32')
 const bip32 = BIP32Factory(ecc)
 const sb = require('satoshi-bitcoin')
-let network = bitcoin.networks.testnet
+let network = bitcoin.networks.bitcoin
 
 
 
@@ -71,7 +71,6 @@ class account {
 
 /**
  * Drives a full aacount from the given key. Always gives the same output for the same input.
- * @param {bitcoin.networks} network Bitcoin mainnet/testnet
  * @param {string} pathIndex Index of the child
  * @param {string} mainPrivateKey The Main Private Key which all childs are driven from
  * @returns account [object] {address, publicKey, privateKey, WIF}
@@ -95,7 +94,15 @@ async function setupAccount(pathIndex, mainPrivateKey) {
       return Promise.resolve(newAccount)
 }
 
-
+/**
+ * Initiation the operation for the new transaction
+ * @param {string} senderAddress 
+ * @param {string} destinationAddress 
+ * @param {number} txAmount 
+ * @param {string} periority 
+ * @param {number} gassAmount 
+ * @returns 
+ */
 async function fetchData(senderAddress, destinationAddress, txAmount, periority, gassAmount) {
       try {
             if (gassAmount != 0) {
