@@ -1,4 +1,8 @@
-Check and improve the Connect Duration on first query to DB (mongoose.connect())
-Include db access chech in healt
-Include bitcoin network access chech in healt
-Improve gas fee estimation
+Check and improve the Connect Duration on first query to DB (mongoose.connect()) D
+Include db access chech in healt    D
+Include bitcoin network access chech in healt   
+Improve gas fee estimation    
+
+
+
+D ==> Done

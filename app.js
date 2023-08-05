@@ -39,9 +39,7 @@ app.use(function (req, res, next) {
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       next();
 });
-// app.use(cors({
-//       origin: accept
-// }));
+
 
 
 // Bitcoin blockchain requirements:
@@ -853,30 +851,6 @@ const decrypt = ((text) => {
       return (decrypted + decipher.final('utf8'));
 });
 
-// const algorithm = 'aes-256-ctr';
-// const ENCRYPTION_KEY = 'adadadadadadadad'; // or generate sample key Buffer.from('FoCKvdLslUuB4y3EZlKate7XGottHski1LmyqJHvUhs=', 'base64');
-// const IV_LENGTH = 16;
-
-// function encrypt(text) {
-//       let iv = crypto.randomBytes(IV_LENGTH);
-//       let cipher = crypto.createCipheriv(algorithm, Buffer.from(ENCRYPTION_KEY, 'hex'), iv);
-//       let encrypted = cipher.update(text);
-//       encrypted = Buffer.concat([encrypted, cipher.final()]);
-//       return iv.toString('hex') + ':' + encrypted.toString('hex');
-// }
-
-// function decrypt(text) {
-//       let textParts = text.split(':');
-//       let iv = Buffer.from(textParts.shift(), 'hex');
-//       let encryptedText = Buffer.from(textParts.join(':'), 'hex');
-//       let decipher = crypto.createDecipheriv(algorithm, Buffer.from(ENCRYPTION_KEY, 'hex'), iv);
-//       let decrypted = decipher.update(encryptedText);
-//       decrypted = Buffer.concat([decrypted, decipher.final()]);
-//       return decrypted.toString();
-// }
-//#endregion CRyptography
-
-//
 
 async function dbConnect() {
       return new Promise((resolve, reject) => {
@@ -923,31 +897,6 @@ async function getVal() {
 }
 
 
-
-
-
-
-// //Encrypting text
-// function encrypt(text) {
-//       let secret = process.env.secret
-//       let key = crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 32);
-//       let iv = crypto.createHash('sha256').update(String(secret)).digest('base64').substring(0, 16);
-//       let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-//       let encrypted = cipher.update(text);
-//       encrypted = Buffer.concat([encrypted, cipher.final()]);
-//       //return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
-//       return encrypted.toString('hex');
-// }
-
-// // Decrypting text
-// function decrypt(text) {
-//       let iv = Buffer.from(text.iv, 'hex');
-//       let encryptedText = Buffer.from(text.encryptedData, 'hex');
-//       let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-//       let decrypted = decipher.update(encryptedText);
-//       decrypted = Buffer.concat([decrypted, decipher.final()]);
-//       return decrypted.toString();
-// }
 
 
 //#endregion ==================== END SERVER FUNCTIONS ====================
