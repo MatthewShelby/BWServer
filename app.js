@@ -885,6 +885,8 @@ async function dbConnect() {
 
 
 // Temporary Database function sample
+// This function can be used to query the database. Its limmited to development phase
+// Will bo deiscarded on production.
 async function getVal() {
       //create
       //return await Promise.resolve(await Data.create({ key: 'latestAD2', value: 0 }))
