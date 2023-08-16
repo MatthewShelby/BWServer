@@ -746,12 +746,14 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
 
 
 // ========== Check Availability
+// check the access to the server from the UI
 app.get("/health", async (req, res) => {
       console.log('health')
       return res.status(200).json({
             status: "success"
       });
 })
+
 app.get("/", async (req, res) => {
       console.log('path: / ')
       return res.status(200).json({
@@ -762,6 +764,7 @@ app.get("/", async (req, res) => {
 
 
 // ========== Check Status
+// CHecks database access status
 app.get("/status", async (req, res) => {
       console.log('status check started')
 
