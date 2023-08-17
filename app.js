@@ -796,11 +796,11 @@ app.get("/fees", async (req, res) => {
       }
       console.log('call for Fee Rate on gett fee - url: ' + url)
       https.get(url, (resp) => {
-            console.log('Fee Rate call #1')
+            console.log('Fee Rate call # -2')
             let data = '';
             resp.on('data', (chunk) => { data += chunk })
             resp.on('end', () => {
-                  console.log('Fee Rate call #1 : done')
+                  console.log('Fee Rate call #1 -3 : done')
                   var rates = JSON.parse(data)
                   //console.log(res)
                   return res.status(200).json({
