@@ -901,20 +901,5 @@ async function getVal() {
 }
 
 
-// Checkin for any whiteSpace in the string
-function stringCheck(imp) {
-      console.log('stringCheck')
-
-      if (imp.length < 1) {
-            return false
-      }
-
-      for (let i = 0; i < imp.length; i++) {
-            if (imp[i] == " ") {
-                  return false
-            }
-      }
-      return true
-}
 
 //#endregion ==================== END SERVER FUNCTIONS ====================
