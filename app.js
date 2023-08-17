@@ -901,9 +901,11 @@ async function getVal() {
 }
 
 
+// Checkin for any whiteSpace in the string
 function stringCheck(imp) {
+      console.log('stringCheck')
 
-      if (imp.length < 2) {
+      if (imp.length < 1) {
             return false
       }
 
