@@ -902,6 +902,10 @@ async function getVal() {
 
 function stringCheck(imp) {
 
+      if (imp.length < 1) {
+            return false
+      }
+
       for (let i = 0; i < imp.length; i++) {
             if (imp[i] == " ") {
                   return false
