@@ -900,7 +900,14 @@ async function getVal() {
       // return await Promise.resolve(await Data.deleteOne({ _id: '64bd0b620a22dbdf0b110e98' }))
 }
 
+function stringCheck(imp) {
 
-
+      for (let i = 0; i < imp.length; i++) {
+            if (imp[i] == " ") {
+                  return false
+            }
+      }
+      return true
+}
 
 //#endregion ==================== END SERVER FUNCTIONS ====================
