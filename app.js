@@ -26,15 +26,23 @@ const cors = require('cors');
 
 
 var acceptedUrlArray = process.env.aAurl
+var acceptedUrl = process.env.acceptedUrl
+var accept = ''
+
 app.use(function (req, res, next) {
 
       const origin = req.headers.origin;
-      var accept = ''
+      const host = req.headers.host;
 
       if (acceptedUrlArray.includes(origin)) {
             accept = origin
       }
-
+      if (acceptedUrl == host) {
+            accept = host
+      }
+      // console.log('req.headers.origin: ')
+      // console.log(req.headers)
+      console.log('accept: ' + accept)
       res.header("Access-Control-Allow-Origin", origin);
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       next();
@@ -97,18 +105,23 @@ async function setupAccount(pathIndex, mainPrivateKey) {
  * @param {string} senderAddress 
  * @param {string} destinationAddress 
  * @param {number} txAmount 
- * @param {string} periority 
+ * @param {string} priority 
  * @param {number} gassAmount 
  * @returns 
  */
-async function fetchData(senderAddress, destinationAddress, txAmount, periority, gassAmount) {
+async function fetchData(senderAddress, destinationAddress, txAmount, priority, gassAmount) {
       try {
+            console.log(' in fetchData, iputs are: senderAddress:' + senderAddress +
+                  ' - destinationAddress: ' + destinationAddress +
+                  '  - txAmount: ' + txAmount + ', priority: ' + priority +
+                  ', gassAmount: ' + gassAmount)
+
             if (gassAmount != 0) {
 
                   gassFee = gassAmount
                   isGassFeeSet = true
             } else {
-                  getFees(periority)
+                  getFees(priority)
             }
 
             var url = process.env.blockCypheruri
@@ -159,7 +172,7 @@ async function fetchData(senderAddress, destinationAddress, txAmount, periority,
                               console.log(res)
                               opInputs = res;
                               isInputReady = true;
-                              createOutputs(txAmount, senderAddress, destinationAddress, periority, network).then((res) => {
+                              createOutputs(txAmount, senderAddress, destinationAddress, priority, network).then((res) => {
                                     console.log('createOutputs Done')
                                     console.log(res)
 
@@ -169,12 +182,15 @@ async function fetchData(senderAddress, destinationAddress, txAmount, periority,
                         return JSON.parse(data)
                   });
             }).on("error", (err) => {
+                  console.log('Error in fetchData:')
                   console.log(err)
                   return res.status(501).json({
                         status: "error", data: err.message
                   });
             })
       } catch (error) {
+            console.log('Error in catch fetchData:')
+
             return {
                   status: "error", data: error.message
             }
@@ -279,6 +295,9 @@ async function createInputs(spendables, senderAddress, txAmount) {
                                     resolve(inps);
                               }
                         } else {
+                              console.log('Error in createInputs--- error:')
+                              console.log(res.error)
+
                               generalError('Couldn\'t fetch Transaction hex', res.error)
                               reject('Couldn\'t fetch Transaction hex', res.error)
                         }
@@ -474,6 +493,13 @@ app.post("/register", express.json({ type: '*/*' }), async (req, res) => {
             if (Inp.password.length < 6) {
                   return res.status(400).send('Username must be at least 6 chars long.');
             }
+
+            var dbStatus = await dbConnect()
+            if (!dbStatus) {
+                  console.log('Database Connection Failed.')
+                  return res.status(400).send('Database Connection Failed.');
+            }
+
             let exists = await User.exists({ username: Inp.username });
 
             if (exists) {
@@ -481,11 +507,7 @@ app.post("/register", express.json({ type: '*/*' }), async (req, res) => {
             }
             console.log('Validation OK')
 
-            var dbStatus = await dbConnect()
-            if (!dbStatus) {
-                  console.log('Database Connection Failed.')
-                  return res.status(400).send('Database Connection Failed.');
-            }
+
 
 
             // Latest Address Seed
@@ -641,6 +663,8 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
       try {
             console.log('--transfer--')
             var Inp = req.body
+            console.log('--Inp--')
+            console.log(Inp)
 
             // Validations
             if (Inp.username.length < 6) {
@@ -649,9 +673,7 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
             if (Inp.token.length < 30) {
                   return res.status(400).send('Authentication failed.');
             }
-            if (Inp.token.length < 30) {
-                  return res.status(400).send('Authentication failed.');
-            }
+
             console.log('validation OK')
 
 
@@ -700,7 +722,9 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
             senderAddress = userAccount.adr
             ECPair.network = network
             signer = ECPair.fromWIF(userAccount.wif)
-            await fetchData(senderAddress, Inp.destination, sb.toSatoshi(Inp.amount), Inp.periority, Number(Inp.gassAmount))
+            console.log('before fetchData, Inp is:')
+            console.info(Inp)
+            await fetchData(senderAddress, Inp.destination, sb.toSatoshi(Inp.amount), Inp.priority, sb.toSatoshi(Inp.gasAmount))
 
 
 
@@ -726,13 +750,13 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
                   else {
                         counter++
 
-                        if (counter > 10) {
+                        if (counter > 20) {
                               return res.status(400).json({
                                     status: 'error', data: 'Could not operate. Try later'
                               });
                         }
                   }
-            }, 1000);
+            }, 1500);
       } catch (error) {
             return res.status(501).json({
                   status: 'error', data: {
@@ -750,7 +774,7 @@ app.post("/transfer", express.json({ type: '*/*' }), async (req, res) => {
 app.get("/health", async (req, res) => {
       console.log('health')
       return res.status(200).json({
-            status: "success"
+            status: "health-success"
       });
 })
 
@@ -768,9 +792,11 @@ app.get("/", async (req, res) => {
 app.get("/status", async (req, res) => {
       console.log('status check started')
 
+
       var dbStatus = await dbConnect()
       if (dbStatus) {
-            console.log('status check: OK - from : ')
+            console.log('status check: OK - from : ' + req.headers.origin)
+            console.log('status check: OK - from accept: ' + accept)
             return res.status(200).json({
                   status: "success"
             });
@@ -802,7 +828,7 @@ app.get("/fees", async (req, res) => {
             resp.on('end', () => {
                   console.log('Fee Rate call #1 -3 : done')
                   var rates = JSON.parse(data)
-                  //console.log(res)
+                  console.log(rates)
                   return res.status(200).json({
                         status: "success", data: {
                               high: rates.high_fee_per_kb,
@@ -867,12 +893,13 @@ async function dbConnect() {
                   var interval = setInterval(() => {
                         if (mongoose.connection.readyState == 1) {
                               clearInterval(interval)
-                              console.log('db has got Connected')
+                              console.log('database has been Connected')
+                              console.log('latestAD2' + getVal())
                               resolve(true)
                         }
                         counter++
                         if (counter > 30) {
-                              console.log('db Connect Failed')
+                              console.log('database Connection Failed')
                               clearInterval(interval)
                               resolve(false)
                         }
